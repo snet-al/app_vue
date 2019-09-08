@@ -1,0 +1,79 @@
+<template id="itemview-module">
+  <div class="">
+    <div class="img-content border">
+      <div class="img-left">
+        <div v-for="img in photos" class="small-img">
+          <img :src="path + img">
+        </div>
+      </div>
+      <div class="img-right">
+        <img class="main-img" :src="path + photos[0]">
+        <div class="cursor-div"></div>
+      </div>
+    </div>
+    <div class="item-details border">
+      <div class="item-title">{{item.data['name']}}</div>
+      <div class="item-description">{{item.data['desciption']}}</div>
+      <div class="item-price-ct">
+        <label>Cmimi:</label>
+        <span class="item-price">{{item.data['price']}}</span>
+      </div>
+      <div item-qty>
+        <label class="active"></label>
+        <input type="number" min="1" value="1" class="qty-input">
+        <button type="button" class="add-btn">
+          <span class="b-add">Shto</span>
+          <span class="b-add-new"></span>
+        </button>
+      </div>
+    </div>
+    <div class="photo-zoomed-ct">
+    </div>
+  </div>
+</template>
+
+<template id="tab-module">
+  <div class="container-fluid tabs container-fluid tabs border rounded mb-4 shadow-sm">
+    <ul class="nav nav-tabs nav nav-tabs pt-4  col-md-12" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+          aria-selected="true">{{tabs[0].label}}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+          aria-selected="false">{{tabs[1].label}}</a>
+      </li>
+    </ul>
+    <div class="tab-content pt-3 pb-3" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">{{item.data.description}}</div>
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">{{item.data.name}}</div>
+    </div>
+  </div>
+</template>
+
+<template id="item-carousel">
+    <div class="owl-carousel owl-theme">
+      <div v-for="(item, index) in ItemStore.data" class="item">
+        <item-cmp
+          :info="item.data"
+          :path="path"
+          :index="index"
+          :on-order="order"
+          :on-register-and-order="doRegisterAndOrder"
+          :on-view-more='viewMore'
+          :key="item.id"
+          :on-add="addCartItem">
+        </item-cmp>
+      </div>
+    </div>
+</template>
+
+<template id="items-module-tpl">
+  <div class="container">
+    <div class="row">
+      <item-cmp v-for="(item, index) in ItemStore.data" :info="item.data" :path="path" :index="index" :on-view-more='viewMore'
+        :on-order="order" :on-register-and-order="doRegisterAndOrder" :key="item.id" :on-add="addCartItem">
+      </item-cmp>
+    </div>
+  </div>
+</template>

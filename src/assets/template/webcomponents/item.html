@@ -1,0 +1,89 @@
+<template id="item-component">
+  <div class="col-auto">
+    <div class="card" style="width: 250px;">
+      <div class="item-image mb-2" @click='viewModal(info.id)'>
+        <img class="card-img-top" :src="path + info.photo_id" alt="Card image cap">
+      </div>
+      <div class="item-title pl-3 pr-3">
+        <a :href="'item.html#!id='+info.id+'&name='+info.url_name">
+          <h6 class="card-title">{{info.name}}</h6>
+        </a>
+      </div>
+      <div class="item-price pl-3 text-muted">
+        <span class="price ">{{info.price}} Lek</span>
+      </div>
+      <div class="item-description pl-3 mb-3 pr-3">
+        <p class="card-text">
+          {{cutDescription}}
+          <a class="text-info" @click='viewModal(info.id)'>Me shume</a>
+        </p>
+      </div>
+      <button type="button" :id="info.id" href="" class="btn btn-primary w-50 ml-3" @click="doOrder(info.id)">Porosit
+      </button>
+      <div class="add-cart" @click="addCart">
+        <span><i class="mov fa fa-cart-plus"></i></span>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  parent.Vue.component('item-cmp', {
+    props: ['path', 'info', 'index', 'onViewMore', 'onAdd', 'onOrder', 'onRegisterAndOrder'],
+    data: function () {
+      return {
+        counter: 0,
+        disableBtn: true,
+        userAddress: '',
+        userEmail: '',
+        userName: '',
+        userMobile: ''
+      }
+    },
+
+    methods: {
+      submitForm: function () {
+        
+      },
+      incrementValue: function () {
+        this.disableBtn = false;
+        this.counter++;
+      },
+      decrementValue: function () {
+        this.counter--;
+        if (this.counter < 1) {
+          this.disableBtn = true;
+        }
+      },
+      viewModal: function (id) {
+        this.onViewMore(this.index, id);
+      },
+      addCart: function () {
+        this.onAdd(this.index)
+      },
+      doOrder: function (itemId) {
+        this.onOrder(this.index, itemId);
+      },
+      doRegisterAndOrder: function(itemId) {
+        var registerData = {
+          name: this.userName,
+          mobile: this.userMobile,
+          email: this.userEmail,
+          address: this.userAddress
+        };
+        this.onRegisterAndOrder(itemId, registerData);
+      }
+    },
+    computed: {
+      cutDescription: function () {
+        if (this.info.description && this.info.description.length > 91) {
+          return this.info.description.substring(0, 30) + "...";
+        } else if (this.info.description) {
+          return this.info.description
+        } else {
+          return '';
+        }
+      }
+    },
+    template: document.getElementById("item-component").innerHTML
+  });
+</script>

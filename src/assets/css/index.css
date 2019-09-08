@@ -1,0 +1,63 @@
+.design{
+    height: 500px;
+    background: red;
+}
+
+.design1 {
+    height: 1000px;
+}
+
+
+.category-title {
+    width: 100%;
+    background: #e6e6e6;
+
+}
+
+body.s-sticky-aside s-aside.s-sticked {
+    position: fixed;
+    bottom: 0px;
+    top: 70px;
+}
+
+.panel-heading {
+    border: 0px;
+    background-color: rgb(240, 245, 225);
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #efefef;
+    height: 40px;
+}
+
+.head-name {
+    height: 100%;
+    color: #4fa157;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    font-weight: bold;
+}
+
+.list-inline-item:not(:last-child) {
+    margin-right: 117px;
+}
+
+/* Testt .pager mode */
+.pager_mode {
+    width: 130px;
+    margin: 5px;
+    display: inline-flex;
+}
+
+.results-ct {
+    background: #e6e6e6;
+}
+
+.thumbnail-item {
+    width: 200px;
+    background: #e6e6e6;
+    display: inline-block;
+}
+
+.result-items {
+    background: lightgray;
+}
+

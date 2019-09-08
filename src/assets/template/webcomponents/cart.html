@@ -1,0 +1,73 @@
+<template id="cart-dropdown-item">
+  <div class=" shopping-cart-items pb-5 mb-3">
+    <img class="cart-img pr-2 " :src="cartRecord.item_photo" alt>
+    <span class="item-name ">{{ cartRecord.item_name }}</span>
+    <div class="cart-prices ">
+      <span class="item-price">{{ cartRecord.price }} {{ currency }}</span>
+      <span class="first-price">{{ cartRecord.total.toFixed(0) }} {{ currency }}</span>
+      <div class="remove-item-cart badge " @click="removeItem(index) ">X</div>
+    </div>
+
+    <div class="input-group qty-cart ">
+      <span class="input-group-btn ">
+        <button class=" btn-sm quantity-left-minus-cart btn btn-outline-dark " data-field data-type="minus " type="button" @click="decrementValue "
+          :disabled="disableBtn ">
+          <i class="fa fa-minus mid "></i>
+        </button>
+      </span>
+      <input class="quantity-cart btn-sm form-control input-number" name="quantity" value="cartRecord.quantity" type="number "
+        v-model="counter" @keyup="updateStore">
+      <span class="input-group-btn ">
+        <button class="btn-sm quantity-right-plus-cart btn btn-outline-dark" v-bind:id="'cart-plus-' + cartRecord.item_id " data-type="plus "
+          type="button" @click="incrementValue(index) ">
+          <i class="fa fa-plus mid "></i>
+        </button>
+      </span>
+    </div>
+  </div>
+
+</template>
+<script>
+  parent.Vue.component('cart-dropdown-item', {
+    props: ['cartRecord', 'index', 'onUpdate', 'onRemove', 'currency'],
+    data: function () {
+      return {
+        counter: this.cartRecord.quantity,
+        disableBtn: true
+      }
+    },
+    methods: {
+      submitForm: function () {},
+      incrementValue: function () {
+        this.disableBtn = false;
+        this.counter++;
+        this.updateStore();
+      },
+      decrementValue: function () {
+        this.counter--;
+        if (this.counter < 1) {
+          this.disableBtn = true;
+        }
+        this.updateStore();
+      },
+      updateStore: function () {
+        this.onUpdate(this.index, this.counter);
+      },
+      removeItem: function () {
+        this.onRemove(this.index);
+      }
+    },
+    computed: {
+      cutDescription: function () {
+        if (this.info.description && this.info.description.length > 91) {
+          return this.info.description.substring(0, 30) + "...";
+        } else if (this.info.description) {
+          return this.info.description
+        } else {
+          return '';
+        }
+      }
+    },
+    template: document.getElementById("cart-dropdown-item").innerHTML
+  });
+</script>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>ITEM PAGE</title>
+  </head>
+
+  <body class="s-default">
+    <s-page class="s-sticky-container ">
+      <s-header class="top-header">
+        <s-header-inner id="user-header" class="s-center">
+          <module id="top-header" name="headers/TopHeader"></module>
+        </s-header-inner>
+      </s-header>
+      <s-header class="s-sticky search-header">
+        <s-bar id="search-header" class="s-center">
+          <module id="search-header" name="headers/SearchHeader"></module>
+        </s-bar>
+        <module id="a" name="CartDropdown"></module>
+      </s-header>
+      <s-header
+        id="category-header-tpl-ct"
+        class="s-sticky category-header">
+        <module id="category-header" name="headers/CategoryHeader"></module>
+      </s-header>
+
+      <s-main class="s-center">
+        <s-content class="">
+          <div id="item-tpl-ct"></div>
+          <div id="tab-tpl-ct"></div>
+          <module id="item" name="Item"></module>
+          <!--<module id="b" name="CartDropdown"></module>-->
+        </s-content>
+      </s-main>
+      <s-footer>
+        <module id="footer" name="Footer"></module>
+      </s-footer>
+    </s-page>
+    <module id="c" name="ItemModal"></module>
+    <module id="login" name="LoginModal"></module>
+    <module id="register" name="RegisterModal"></module>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+<template id="categories-tpl">
+    <div class="category-container mb-2 pb-4" >
+       <div class="card card-category text-center" v-for="(category, index) in CategoriesStore.data" :key="index">
+           <div class="category-image-container">
+             <img class="category-image" src="./resources/img/robot.jpg">
+           </div>
+           <div class="category-title text-muted">
+              <span>{{category.data.name}}</span>
+            </div>
+       </div>
+    </div>
+</template>

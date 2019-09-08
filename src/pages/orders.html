@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>ORDER PAGE</title>
+  </head>
+
+  <body class="s-default">
+    <s-page class="s-sticky-container ">
+      <s-header class="top-header">
+        <s-header-inner id="user-header" class="s-center"></s-header-inner>
+      </s-header>
+      <s-header class="s-sticky search-header">
+        <s-bar id="search-header" class="s-center"></s-bar>
+        <module name="CartDropdown"></module>
+      </s-header>
+      <s-header
+        id="category-header-tpl-ct"
+        class="s-sticky category-header"
+      ></s-header>
+
+      <s-main class="s-center">
+        <s-content class="">
+          <div id="item-tpl-ct"></div>
+          <div id="tab-tpl-ct"></div>
+          <module name="SameCategoryItems"></module>
+        </s-content>
+      </s-main>
+      <s-footer>
+        <div id="footer-container"></div>
+      </s-footer>
+    </s-page>
+    <module name="ItemModal"></module>
+    <module name="LoginModal"></module>
+  </body>
+</html>

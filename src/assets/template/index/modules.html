@@ -1,0 +1,429 @@
+<template id="user-module">
+  <div class="header-inner">
+    <ul class="user-header">
+      <li>
+        <a href="contact.html" class="userHeader-link">
+          {{contact}}
+        </a>
+      </li>
+      <li>
+        <a v-if="UserModelInstance" href="order.html" class="userHeader-link">
+          Porosite
+        </a>
+      </li>
+      <li>
+        <a href="javascript:console.log(1)" class="userHeader-link">
+          {{userName}}
+        </a>
+      </li>
+      <li>
+        <a href="javascript:console.log(1)" class="userHeader-link" @click="userAction">
+          {{loginLogout}}
+        </a>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<template id="search-header-tpl">
+  <div class="header-logo">
+    <a href="/index.html">
+      <img class="main-logo" :src="logo">
+    </a>
+  </div>
+  <div class="checkout-header">
+    <div class="order-header" @click="toggleCart">
+      <button class="icon-checkout">
+        <i :class="icon"></i>
+      </button>
+      <div class="order-total">
+        {{title}}
+        <br>
+        <span class="order-amount"> {{ getTotalAmount() }} </span>
+      </div>
+    </div>
+  </div>
+  <div class="searchbox">
+    <input id="header-search" v-model="input" @keyup="searchOnKeyUp($event, this.value)" type="search" placeholder="Search products & recipes"
+      aria-label="Search products & recipes">
+    <div class="actionButtonWrapper">
+      <button aria-label="Search" type="button" class="actionSearchButton">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </div>
+  <div class="header-nav">
+    <nav class="coreHeaderNav">
+      <li v-for="links in searchHeader" class="coreHeaderNav-link">
+        <a :href="links.link" class="coreHeaderNav-link">{{links.name}}</a>
+      </li>
+    </nav>
+  </div>
+</template>
+
+<template id="top-categories-tpl">
+  <ul :id="id" class="s-center">
+    <li v-for="(category, index) in CategoriesStore.data" class="listed-items" @click='filterItems(category.data.id)'>{{category.data.name}}</li>
+  </ul>
+</template>
+
+<!--Item Component-->
+<template id="items-module-tpl">
+  <div class="container">
+    <div class="row">
+      <item-cmp
+        v-for="(item, index) in ItemStore.data"
+        :info="item.data"
+        :path="path"
+        :index="index"
+        :on-view-more='viewMore'
+        :on-order="doOrder"
+        :key="item.id"
+        :on-add="addCartItem">
+      </item-cmp>
+    </div>
+  </div>
+</template>
+
+<!-- MODAL MODULE TEMPLATE-->
+<template id="item-modal-tpl">
+  <div class="modal fade lg" id="orders_modal_" role="dialog" aria-hidden="true" aria-labelledby="exampleModalLongTitle" tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="full-width-modal d-flex">
+          <div class="left-col images-modal">
+            <img class="img-size" :src="'/store/images/items/'+ItemRecord.data.photo_id" alt="">
+            <div class="item-photo-section" v-for="(index, photos) in ItemRecord.data.photos">
+              <img class="img-size" :src="'/store/images/items/'+photos.photo_id" alt="">
+            </div>
+          </div>
+          <div class="right-col">
+            <div class="item-details-section pl-3 pr-3 pt-2">
+              <div class="item-modal-title  text-body mb-3">
+                <div>{{ItemRecord.data.name}}</div>
+              </div>
+              <div class="item-modal-price text-black-50 font-weight-bold mb-1 border-bottom pb-2">
+                <span class="modal-price">{{ItemRecord.data.price}}</span>
+              </div>
+              <div class="item-modal-description  text-body mb-3">
+                <p class="card-text">{{ItemRecord.data.description}}</p>
+              </div>
+              <button type="button" href="" class="btn btn-primary w-50" @click="doOrder(ItemRecord.data.id)">Porosit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- LOGIN MODAL TEMPLATE -->
+<template id="login-modal-template">
+  <div id="login-modal" class="fade modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-content modal-sm">
+      <h3 class="mx-auto mt-2 text-change">Login</h3>
+      <form id="login-form" onsubmit="return false;">
+          <div id="login-fields">
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-at"></i></span>
+              </div>
+              <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Phone number, username, or email" name="username">
+            </div>
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-key"></i></span>
+              </div>
+              <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Password" name="password">
+            </div>
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3 ">      
+                <button id="login-button" type="submit" class="btn btn-primary mx-auto w-100" @click="submitLoginData">Login</button>
+            </div>
+            <div class="register-text pl-3" @click="showRegister">
+              <h6 class="text-info reg-text">Regjistrohu</h6>
+            </div>
+          </div>
+      </form>
+
+      <form id="register-form" onsubmit="return false;" class="register-form">
+        <div class="collapse border-0" id="collapse-login">
+          <div class="register-fill pt-3">
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-at"></i></span>
+              </div>
+              <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Email" name="email">
+            </div>
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-user"></i></span>
+              </div>
+              <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Emer Mbiemer" name="name">
+            </div>
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-phone"></i></span>
+              </div>
+              <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Nr telefoni/mobile" name="mobile">
+            </div>
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-key"></i></span>
+              </div>
+              <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Password" name="password">
+            </div>
+            <div class="input-group input-group-sm mb-3 pl-3 pr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-key"></i></span>
+              </div>
+              <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                placeholder="Retype Password" name="password1">
+            </div>
+          </div>
+          <div class=" input-group-sm mb-3 pl-3 pr-3 ">
+              <button id="register-button" type="submit" class="btn btn-primary mx-auto w-100" @click="submitRegisterData">Regjistrohu</button>
+          </div>          
+          <div class="back-login pl-3"  @click="backToLogin">
+            <h6 class="text-info">Kthehu ne login</h6>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+
+
+
+<!-- Cart Dropdown -->
+<template id="cart-dropdown-tpl">
+  <div class="cart-dropdown s-center">
+    <div class="shopping-cart pl-3 pr-3 shadow p-3 mb-3 mr-3 rounded">
+      <div class="shopping-cart-header border-bottom  pb-3 mb-3">
+        <i class="fa fa-shopping-cart cart-icon"></i>
+        <span class="badge"> {{ countItems() }}</span>
+        <div class="shopping-cart-total">
+          <span class="text-black-50">Totali : </span>
+          <span class="text-primary"> {{ getTotal() }} {{ currency }} </span>
+        </div>
+      </div>
+      <cart-dropdown-item v-for="(cartRecord, index) in CartDropdownStore.data" class="shopping-cart-body border-bottom"
+        :cart-record="cartRecord.data" :index="index" :currency="currency" :on-update="updateQuantity" :on-remove="removeCartItem"
+        :key="cartRecord.data.item_id">
+      </cart-dropdown-item>
+      <div v-if="CartDropdownStore.data.length !== 0">
+        <button type="submit" @click="dropdownOrderAction()" class="btn btn-success w-100">Porosit</button>
+        <p class="text-info center-text pt-2 d-table" data-target="#transport-info"  data-toggle="collapse" aria-expanded="true" aria-controls="collapseExample">
+          Transporti
+        </p>
+        <div class="collapse" id="transport-info">
+          <div class="card card-body">
+            Tirane - Free 
+            <br>
+            Rrethe - 200 Lek 
+            <br>
+            Kosove - 7-Euro   
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<!-- Footer zone tpl -->
+<template id="footer-tpl">
+  <div class="footer">
+    <div class="s-center">
+      <a href="#" class="footer-back ">
+        Back To Top
+        <i class="fa fa-arrow-up"></i>
+      </a>
+    </div>
+    <div class="footer-socialmedia s-center">
+      <span class="footer-socialmediaText">Follow Us SocialMedia</span>
+      <a target="_blank" href="https://www.facebook.com">
+        <span class="sr-only">Follow us on Facebook, Opens in a new window</span>
+        <i class="iconww-Facebook footer-socialmediaIcon"></i>
+      </a>
+      <span class="sr-only">Follow us on Facebook, Opens in a new window</span>
+      <i class="icon-Facebook footer-socialmediaIcon"></i>
+    </div>
+    <div class="footer-links s-center">
+      <div class="footer-col">
+        <div class="footer-colPanel">
+          <h4 class="footer-heading">Rreth TopSeller.al</h4>
+          <div class="footer-linkContainer">
+            <div class="footer-linkItems">
+              Adresa: <br><span style="font-size: 12px; margin:0 0 9px 2px;">Rruga "Joklin Persi", Unaze e Re, Tiranë.</span>
+              <i class="iconww-ArrowRight"></i>
+            </div>
+            <div class="footer-linkItems">
+              Telefoni: <br><span style="font-size: 12px; margin:0 0 9px 2px;">067 60 66 665</span>
+              <i class="iconww-ArrowRight"></i>
+            </div>
+            <div class="footer-linkItems">
+              E-mail: <br><span><a style="font-size: 12px; margin:0 0 9px 2px;" href="mailto:info1topseller@gmail.com">info1topseller@gmail.com</a></span>
+              <i class="iconww-ArrowRight"></i>
+            </div>
+            <div class="footer-linkItems">
+              Social: <br><span></span>
+              <i class="iconww-ArrowRight"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-colPanel">
+          <h4 class="footer-heading">Shop Groceries Online</h4>
+          <div class="footer-linkContainer">
+            <a class="footer-linkItems">
+              Track My Order
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              View My Account
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Pick up
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Delivery
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Express Delivery
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Delivery Saver Pass
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              New to Online Shopping?
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Shop for your Business
+              <i class="iconww-ArrowRight"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-colPanel">
+          <h4 class="footer-heading">Useful Links</h4>
+          <div class="footer-linkContainer">
+            <a class="footer-linkItems">
+              Store Locations &amp; Trading Hours
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Woolworths Rewards
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Recipes &amp; Easy Dinner Ideas
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Woolworths Catalogue
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Woolworths Fresh Magazine
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Woolworths Apps
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Flowers Online
+              <i class="iconww-ArrowRight"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-colPanel">
+          <h4 class="footer-heading">About TopSeller</h4>
+          <div class="footer-linkContainer">
+            <a class="footer-linkItems">
+              Careers
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Why Pick Woolies?
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a ng-href="/shop/discover/our-brands" class="footer-linkItems">
+              Our Brands
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Community Donations
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Suppliers
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Become an Affiliate
+              <i class="iconww-ArrowRight"></i>
+            </a>
+            <a class="footer-linkItems">
+              Corporate Responsibility
+              <i class="iconww-ArrowRight"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-copyright s-center" wow-html-setting="" setting-group="Copyright" setting-name="OnesiteCopyrightFooterHtml">
+      <span> © Nana Ltd 1997-2017 - All Rights Reserved</span>
+      |
+      <a href="/Shop/Discover/about-us/privacy-policy" class="a-color" target="_blank">Privacy Policy</a>
+      |
+      <a href="/Shop/Discover/about-us/collection-notice" class="a-color" target="_blank">Collection Notice</a>
+      |
+      <a href="/Shop/Discover/about-us/cookies-statement" class="a-color" target="_blank">Cookies Statement</a>
+      |
+      <a href="/Shop/Discover/about-us/terms-and-conditions" class="a-color" target="_blank">Terms &amp; Conditions</a>
+      |
+      <a href="/shop/support/accessibility" class="a-color" target="_blank">Accessibility</a>
+    </div>
+
+  </div>
+</template>
+
+<template id="tab-tpl">
+  <div :id="id">
+    <ul class="nav nav-tabs" role="tablist">
+
+      <li v-for="tab in tabs" class="nav-item">
+
+        <a :class="{'nav-link':true, active: tab.default}" :id="tab.name" data-toggle="tab" :href="tab.name" role="tab"
+          aria-controls="tab.name" aria-selected="default">{{tab.label}}
+        </a>
+
+      </li>
+
+    </ul>
+    <div v-for="specification in tabs" class="tab-content">
+
+      <div :class="{'tab-pane fade show':true, active: specification.default}" :id="specification.name" role="tabpanel"
+        aria-labelledby="specification.name">. . . . .</div>
+
+    </div>
+  </div>
+</template>

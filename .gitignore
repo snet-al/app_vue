@@ -1,0 +1,7 @@
+node_modules
+.idea
+.project
+.DS_Store
+dist
+.vscode/settings.json
+.env

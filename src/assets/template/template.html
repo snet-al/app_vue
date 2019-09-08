@@ -1,0 +1,589 @@
+<html>
+<head>
+    <!-- Top header tpl -->
+
+    <template id="header-tpl">
+        <div class="header-inner">
+            <ul class="user-header">
+
+                    <li v-for="links in topHeader">
+                        <a :href="links.top_head_link"  class="userHeader-link"  target="_self">{{links.top_head_name}}</a>
+                    </li>
+            </ul>
+        </div>
+    </template>
+
+    <!-- Search header tpl -->
+
+    <template id="search-header-tpl">
+        <div class="checkout-header">
+            <a class="order-header" :href="link">
+                <button class="icon-checkout">
+                    <i :class="icon"></i>
+                </button>
+                <div class="order-total">
+                    {{title}}
+                    <br>
+                    <span class="order-amount"> {{cart_amount}} </span>
+                </div>
+            </a>
+        </div>
+        <div class="searchbox">
+            <input id="header-search"  type="search" placeholder="Search products & recipes" aria-label="Search products & recipes" >
+            <div class="actionButtonWrapper">
+                <button aria-label="Search" type="button" class="actionSearchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="header-nav">
+            <nav class="coreHeaderNav">
+                <li v-for="links in searchHeader" class="coreHeaderNav-link" >
+                    <a :href="links.link" class="coreHeaderNav-link">{{links.name}}</a>
+                </li>
+            </nav>
+        </div>
+    </template>
+
+
+    <!--  Header Nav Categories Template  -->
+
+	<template id="top-categories-tpl">
+		<ul  :id="id" class="s-center" >
+			<li v-for="category in categories.data"  class="listed-items">{{category.data.name}}</li>
+		</ul>
+	</template>
+
+    <!-- Left S-aside Categories Template -->
+
+	<template id="left-categories-tpl">
+		<div id="id">
+			<div class=""> {{title}} </div>
+			<ul v-for="category in categories.data" class="category-list">
+				<li class="#">
+					<div>{{category.data.name}} </div>
+				</li>
+			</ul>
+		</div>
+	</template>
+
+	<template id="cart-tpl">
+		<div :id="id">
+			<div class="panel-heading">
+				<div class="head-name"> {{title}}</div>
+				<i>  </i>
+			</div>
+			<div id="table-ct">
+				<div class="cart-container">
+					<div class="head-container" >
+						<div class="list-inline ">
+							<div class="list-inline-item" >
+								{{table_head_id}}
+                                <div class="column"></div>
+							</div>
+                            <div class="list-inline-item" >
+                                {{table_head_product}}
+                                <div class="column"></div>
+                            </div>
+                            <div class="list-inline-item" >
+                                {{table_head_amount}}
+                                <div class="column"></div>
+                            </div>
+                            <div class="list-inline-item" >
+                                {{table_head_price}}
+                                <div class="column"></div>
+                            </div>
+                            <div class="list-inline-item" >
+                                {{table_head_total}}
+                                <div class="column"></div>
+                            </div>
+                            <div class="list-inline-item" >
+                                {{table_head_status}}
+                                <div class="column"></div>
+                            </div>
+						</div>
+					</div>
+                    <div class="body-cart">
+                        <ul v-for="items in store" class="list-inline">
+
+                            <li   class="list-inline-item">
+                                {{items.id}}
+                            </li>
+                            <li class="list-inline-item">
+                                {{items.name}}
+                            </li>
+                            <li class="list-inline-item">
+                                {{items.amount}}
+                            </li>
+                            <li class="list-inline-item">
+                                {{items.price}}
+                            </li>
+                            <li class="list-inline-item">
+                                {{items.total}}
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="cart-foot">
+                        <ul class="list-inline">
+                            <li class="list-inline-item "> {{total_text}}</li>
+                            <li class="list-inline-item ">
+                                <span id="tot"> {{total_num}}</span>
+                            </li>
+                            <li class="list-inline-item ">
+                                <button type="submit"> {{button_order}}</button>
+                            </li>
+                        </ul>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</template>
+
+    <!-- Pager results Modul  Template -->
+
+    <template id="pager-results-tpl">
+        <div :id="id" class="result-items">
+            <div class="pager_mode">
+                <div class="btn_show_all"> {{button_show_all}} </div>
+                <div class="btn_show_pager"> {{button_pager}} </div>
+            </div>
+            <div class="pager-section">
+                <div class="pager-elements">
+                    <div class="pager-container">
+
+                        <span class="s-cmp-pager-event-prev">
+						    <span class="fa fa-angle-left fa-lg"></span>
+					    </span>
+                        <span class="s-cmp-pager-event-first">
+						    <span class="fa fa-angle-double-left fa-lg"></span>
+					    </span>
+
+                        <span class="total-results">{{results_num}}</span>
+                        <span class="slash">/</span>
+                        <input class="s-cmp-pager-event-input" type="text">
+
+                        <span class="s-cmp-pager-event-last">
+						    <span class="fa fa-angle-double-right fa-lg"></span>
+					    </span>
+                        <span class="s-cmp-pager-event-next">
+						    <span class="fa fa-angle-right fa-lg"></span>
+					    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script id="modal-tpl" type="text/html">
+
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog  modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Modal Heading</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Modal body..
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" id="closeModal" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </script>
+
+    <!-- Items modul Template -->
+
+    <template id="items-tpl">
+        <div :id="id"  class="s-cmp s-cmp-item">
+
+            <div v-for="items in store" id="item_" class="s-cmp-item-event-text thumbnail-item" data-toggle="modal" data-target="#myModal" onclick="startModal();">
+
+                <div class="img">
+                    <div class="state_000"></div>
+                    <img src="#">
+                </div>
+                <div class="item-blur">
+                    <div> {{items.photo}}</div>
+                </div>
+                <div class="base">
+                    <div class="name">{{items.name}}</div>
+                </div>
+                <div class="base">
+                    <div class="price">{{items.price}}</div>
+                </div>
+                <div class="details">
+                    <input data_item="2" class="s-cmp-item-event-input" type="number" min="1" value="1">
+                    <div data_item="2" class="s-cmp-item-event-cart item-cart"><i class="fa fa-cart-ar-down" aria-hidden="true"></i></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- Feature view tpl -->
+    <template id="itemview-tpl">
+        <div :id="id" class="s-cmp s-cmp-itemview">
+            <div class="images-section">
+                <div class="thumbnails">
+
+                    <div  v-for="item in items" class="thumbnail-ct">
+                        <img src="{{this}}">
+                    </div>
+
+                </div>
+
+                <div class="thumbnail-panel-view">
+                    <img class="main-image" src="{{photo}}">
+                    <div class="cursor-pointer"></div>
+                </div>
+            </div>
+            <div class="details">
+                <div class="item-title">{{name}}</div>
+                <div class="item-desc">{{description }}</div>
+                <div class="item-price-ct">
+                    <label>Cmimi:</label><span class="item-price">{{price}}</span>
+                </div>
+                <div class="item_qty">
+                    <label class="active">Sasia:</label><input type="number" min="1" value="1">
+                    <button type="button" class="">
+                        <span class="b_add">Shto</span>
+                        <span class="b_add_new"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <style type="text/css">
+            .s-cmp.s-cmp-itemview {
+                position: relative;
+                width: 100%;
+                height: 400px;
+            }
+            .s-cmp.s-cmp-itemview .images-section {
+                position: relative;
+                float: left;
+                height: 325px;
+                width: 460px;
+                box-shadow: 0 0px 3px rgba(0, 0, 0, 0.1);
+                background: #fefefe;
+            }
+            .s-cmp.s-cmp-itemview .images-section .thumbnails {
+                position: relative;
+                float: left;
+                height: 325px;
+                width: 100px;
+            }
+            .s-cmp.s-cmp-itemview .images-section .thumbnails .thumbnail-ct {
+                height: 100px;
+                overflow: hidden;
+                background: red;
+            }
+            .s-cmp.s-cmp-itemview .details {
+            }
+        </style>
+    </template>
+
+
+    <!-- Social zone order tpl -->
+
+    <template id="social-tpl">
+        <div class="panel-heading">
+            <b>{{social_head_text}}</b>
+        </div>
+        <div class="">
+            <div class="">
+                <div class=""><i class="fa fa-search" aria-hidden="true"></i></div>
+                <input type="" name="search_friend" class="account_user_input s-cmp-socialzone-event-search" placeholder="search friends" value="">
+            </div>
+        </div>
+    </template >
+
+    <!-- Account zone tpl -->
+
+    <template id="account-tpl">
+        <div :id="id" class="">
+            <div class="panel-heading">
+                <b>{{account_head_text}}</b>
+                <span id="tot"></span></div>
+            <div class="userinfo-panel-body">
+                <div class="">
+                    <div class="username ">{{account_username}}</div>
+                    <div class="" data-atr="19"></div>
+                </div>
+                <div class="">
+                    <div class="name ">{{account_name}}</div>
+                    <input type="" name="name" data-atr="usr_19" class="account_user_input" value="">
+                </div>
+                <div class="">
+                    <div class="gender">{{account_user_gender}}</div>
+                    <div class="" data-atr="19"></div>
+                </div>
+                <div class="address_container ">
+                    <div class="account_title">{{account_address1}}</div>
+                    <div class="">
+                        <div class="phone ">{{account_address2}}</div>
+                        <input type="" name="address" data-atr="add_10" class=" account_user_input" value="">
+                    </div>
+                    <div class="">
+                        <div class="phone ">{{account_city}}</div>
+                        <input type="" name="city" data-atr="add_10" class=" account_user_input" value="">
+                    </div>
+                    <div class="">
+                        <div class="phone ">{{account_country}}</div>
+                        <input type="" name="state" data-atr="add_10" class=" account_user_input" value="">
+                    </div>
+                    <div class="contact_container">
+                        <div class="account_title  ">{{account_contact}}</div>
+                        <div class="">
+                            <div class="mobile">{{account_phone}}</div>
+                            <input type="" name="phone" data-atr="con_default" class=" account_user_input" value="">
+                        </div>
+                        <div class="">
+                            <div class="mobile ">{{account_mobile}}</div>
+                            <input type="" name="mobile" class="account_user_input" data-atr="con_default" value="">
+                        </div>
+                        <div class="">
+                            <div class="mobile">{{account_mail}}</div>
+                            <input type="" name="email" data-atr="con_default" class=" account_user_input" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class=" account_footer">
+                    <button id="cart_action" class="update-btn submit_button s-cmp-button s-cmp-userinfo-event-update" onclick="updateUserInfo()">
+                        <span class="account_save">{{button_update_pass}}</span>
+                        <span class="account_save_new"></span>
+                    </button>
+                    <button id="cart_action" class="update-btn submit_button s-cmp-button s-cmp-userinfo-event-password" onclick="changePasswordDialog()">
+                        <span class="account_save">{{button_change_pass}}</span>
+                        <span class="account_save_new"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Order zone tpl -->
+
+    <template id="order-tpl">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>{{order_items_title}}</b>
+                        <span id="tot"></span>
+                    </div>
+                    <div class="row ">
+                        <div class="col s1">{{order_id}}</div>
+                        <div class="col s3">{{order_data}} </div>
+                        <div class="col s3">{{order_value}}</div>
+                        <div class="col s1">{{order_money}}</div>
+                        <div class="col s3">{{order_status}}</div>
+                        <div class="col s1"> {{order_tot}} </div>
+                    </div>
+
+                    <div   class="row" id="cart_container">
+                        <div v-for="order in orders" class="s-cmp s-cmp-orderlist" :key="order.id">
+                            <div class="row 6">
+                                <div class="col s1">{{order.id}}</div>
+                                <div class="col s3">{{order.date}}</div>
+                                <div class="col s3">{{order.value}}</div>
+                                <div class="col s1">{{order.currency}}</div>
+                                <div class="col s3">{{order.status}}</div>
+                                <div class="col s1"><i data_item="6" class="fa s-cmp-orderlist-event-showproduct fa-chevron-down" data-toggle="collapse" :data-target="'.orders_container_'+order.id"></i></div>
+                            </div>
+                            <div class="orders_container_6">
+                            </div>
+                            <div :class="['orders_container_'+order.id, 'collapse' ,'show']">
+
+                                <div class="row ">
+                                    <div class="col s4">Emertimi</div>
+                                    <div class="col s4">Sasia</div>
+                                    <div class="col s4">Cmimi</div>
+                                </div>
+
+                                <div v-for="detail in order.details" class="row 3" :key="order.id">
+                                    <div class="col s4">{{detail.name}}</div>
+                                    <div class="col s4">{{detail.qty}}</div>
+                                    <div class="col s4">{{detail.price}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </template>
+
+
+
+    <!-- Contact zone tpl -->
+
+    <template id="contact-tpl">
+
+        <div class="s-cmp s-cmp-list">
+
+            <div v-for="list in lists" id="ct_1" class="s-cmp-list-event-text item_block">
+
+                <div class="cat_name">{{list.label}}</div>
+            </div>
+
+        </div>
+
+    </template>
+
+    <!-- Footer zone tpl -->
+    <template id="footer-tpl">
+        <div class="footer">
+            <div class="s-center">
+                <a href="#" class="footer-back " >
+                    Back To Top
+                    <i class="fas fa-chevron-circle-up"></i>
+                </a>
+            </div>
+            <div class="footer-socialmedia s-center">
+                <span class="footer-socialmediaText">Follow Us SocialMedia</span>
+                <a target="_blank" href="https://www.facebook.com">
+                    <span class="sr-only">Follow us on Facebook, Opens in a new window</span><i class="iconww-Facebook footer-socialmediaIcon"></i>
+                </a>
+                <span class="sr-only">Follow us on Facebook, Opens in a new window</span>
+                <i class="iconww-Facebook footer-socialmediaIcon"></i>
+            </div>
+            <div class="footer-links s-center">
+                <div class="footer-col">
+                    <div class="footer-colPanel">
+                        <h4 class="footer-heading">Customer Service</h4>
+                        <div class="footer-linkContainer" >
+                            <a class="footer-linkItems">
+                                Help &amp; Support <i class="iconww-ArrowRight"></i> </a>
+                            <a class="footer-linkItems">
+                                Contact Us <i class="iconww-ArrowRight"></i></a>
+                            <a class="footer-linkItems">
+                                Feedback <i class="iconww-ArrowRight"></i></a>
+                            <a  class="footer-linkItems">
+                                Product Safety <i class="iconww-ArrowRight"></i></a>
+                            <a class="footer-linkItems">
+                                Product Recalls <i class="iconww-ArrowRight"></i></a>
+                            <a class="footer-linkItems">
+                                Return Policy <i class="iconww-ArrowRight"></i></a>
+                            <a class="footer-linkItems">
+                                Scam Warning <i class="iconww-ArrowRight"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <div class="footer-colPanel">
+                        <h4 class="footer-heading">Shop Groceries Online</h4>
+                        <div class="footer-linkContainer" >
+                            <a class="footer-linkItems">
+                                Track My Order <i class="iconww-ArrowRight"></i>
+                            </a><a class="footer-linkItems">
+                            View My Account <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Pick up <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Delivery <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Express Delivery <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Delivery Saver Pass <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            New to Online Shopping? <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Shop for your Business <i class="iconww-ArrowRight"></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <div class="footer-colPanel">
+                        <h4 class="footer-heading">Useful Links</h4>
+                        <div class="footer-linkContainer" >
+                            <a class="footer-linkItems">
+                                Store Locations &amp; Trading Hours <i class="iconww-ArrowRight"></i>
+                            </a><a class="footer-linkItems">
+                            Woolworths Rewards <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Recipes &amp; Easy Dinner Ideas <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems" >
+                            Woolworths Catalogue <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Woolworths Fresh Magazine <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Woolworths Apps <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Flowers Online <i class="iconww-ArrowRight"></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <div class="footer-colPanel">
+                        <h4 class="footer-heading">About TopSeller</h4>
+                        <div class="footer-linkContainer" >
+                            <a  class="footer-linkItems">
+                                Careers <i class="iconww-ArrowRight"></i>
+                            </a><a class="footer-linkItems" >
+                            Why Pick Woolies? <i class="iconww-ArrowRight"></i>
+                        </a><a ng-href="/shop/discover/our-brands" class="footer-linkItems" >
+                            Our Brands <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems" >
+                            Community Donations <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems" >
+                            Suppliers <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Become an Affiliate <i class="iconww-ArrowRight"></i>
+                        </a><a class="footer-linkItems">
+                            Corporate Responsibility <i class="iconww-ArrowRight"></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright s-center" wow-html-setting="" setting-group="Copyright" setting-name="OnesiteCopyrightFooterHtml">
+                <span> © Nana Ltd 1997-2017 - All Rights Reserved</span>
+                |
+                <a href="/Shop/Discover/about-us/privacy-policy" class="a-color" target="_blank">Privacy Policy</a>
+                |
+                <a href="/Shop/Discover/about-us/collection-notice" class="a-color" target="_blank">Collection Notice</a>
+                |
+                <a href="/Shop/Discover/about-us/cookies-statement" class="a-color" target="_blank">Cookies Statement</a>
+                |
+                <a href="/Shop/Discover/about-us/terms-and-conditions" class="a-color" target="_blank">Terms &amp; Conditions</a>
+                |
+                <a href="/shop/support/accessibility" class="a-color" target="_blank">Accessibility</a>
+            </div>
+
+        </div>
+    </template>
+
+    <template id="tab-tpl">
+        <div :id="id">
+            <ul class="nav nav-tabs" role="tablist">
+
+                <li v-for="tab in tabs" class="nav-item">
+
+                    <a :class="{'nav-link':true, active: tab.default}" :id="tab.name" data-toggle="tab" :href="tab.name" role="tab"
+                       aria-controls="tab.name"
+                    aria-selected="default">{{tab.label}}
+                    </a>
+
+                </li>
+
+            </ul>
+            <div v-for="specification in tabs" class="tab-content">
+
+                <div :class="{'tab-pane fade show':true, active: specification.default}" :id="specification.name" role="tabpanel" aria-labelledby="specification.name">. . . . .</div>
+
+            </div>
+        </div>
+    </template>
+
+</head>
+</html>
